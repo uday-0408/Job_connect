@@ -1,8 +1,15 @@
-const express=require('express')
+// const express=require('express')
+import express from 'express';
 const app=express()
-const cookie_parser=require('cookie-parser')
-const cors=require('cors')
-const connectDB = require('./utils/db'); // Import the database connection utility
+// const cookie_parser=require('cookie-parser')
+import cookie_parser from 'cookie-parser';
+// const cors=require('cors')
+import cors from 'cors';
+// const connectDB = require('./utils/db'); // Import the database connection utility
+import connectDB from './utils/db.js'; // Import the database connection utility
+// const routes = require('./routes/user.route'); // Import user routes
+import routes from './routes/user.route.js'; // Import user routes
+
 const port=3000
 
 app.use(express.json())
@@ -21,6 +28,9 @@ app.get('/',(req,res)=>{
 
     })
 });
+
+app.use('/api/v1/user', routes); // Use user routes
+
 
 app.listen(port ,()=>{
     connectDB(); // Connect to the database
