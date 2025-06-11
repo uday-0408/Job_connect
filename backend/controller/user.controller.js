@@ -85,7 +85,12 @@ export const login = async (req, res) => {
         user,
         success: true,
       });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error during login:", error);
+    return res
+      .status(500)
+      .json({ message: "Internal server error from login", success: false });
+  }
 };
 
 export const logOut = async (req, res) => {

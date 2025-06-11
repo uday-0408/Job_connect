@@ -1,10 +1,12 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const compony = mongoose.Schema(
+const company = mongoose.Schema(
   {
     name: {
       type: String,
       require: true,
+      unique: true, // Ensure company names are unique
     },
     description: {
       type: String,
@@ -28,4 +30,4 @@ const compony = mongoose.Schema(
   { timestamps: true }
 );
 
-export const Company = mongoose.model("Compony", compony);
+export const Company = mongoose.model("Company", company);
