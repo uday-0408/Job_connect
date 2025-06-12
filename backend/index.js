@@ -5,6 +5,8 @@ import cors from 'cors';
 import connectDB from './utils/db.js'; // Import the database connection utility
 import routes from './routes/user.route.js'; // Import user routes
 import companyRoutes from './routes/company.route.js'; // Import company routes
+import jobRoutes from './routes/job.route.js'; // Import job routes
+import applicationRoutes from './routes/application.route.js'; // Import application routes
 const port=3000
 
 app.use(express.json())
@@ -26,6 +28,8 @@ app.get('/',(req,res)=>{
 
 app.use('/api/v1/user', routes); // Use user routes
 app.use('/api/v1/company', companyRoutes); // Use company routes
+app.use('/api/v1/job', jobRoutes); // Use job routes
+app.use('/api/v1/application', applicationRoutes); // Use application routes
 
 
 app.listen(port ,()=>{
