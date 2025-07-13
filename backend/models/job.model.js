@@ -1,9 +1,11 @@
-const { application } = require("express");
-const mongoose = require("mongoose");
+// const { application } = require("express");
+// const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import { Application } from "./application.model.js"; // Import Application model
 
 const job = mongoose.Schema(
   {
-    title: {
+    title: {  
       type: String,
       required: true,
       trim: true,
@@ -16,6 +18,11 @@ const job = mongoose.Schema(
     salary: {
       type: Number, // e.g., "50,000 - 70,000"
       required: true,
+    },
+    experienceLevel: {
+      type: Number, // e.g., "1-3 years"
+      required: true,
+      min: 0, // Minimum experience in years
     },
     location: {
       type: String, // e.g., "Remote", "On-site", "Hybrid"
