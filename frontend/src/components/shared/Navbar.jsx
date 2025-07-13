@@ -7,8 +7,8 @@ import { LogOut, User2 } from 'lucide-react'
 import {Link} from "react-router-dom";
 import { useSelector } from 'react-redux'
 const Navbar = () => {
-    // const {user}=useSelector(store=>store.auth)
-    const user=true
+    const {user}=useSelector(store=>store.auth)
+    // const user=false
     return (
         <div className='bg-white'>
             <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
@@ -52,8 +52,8 @@ const Navbar = () => {
                                             </Avatar>
                                             <div>
 
-                                                <h4 className='font-medium '>idk</h4>
-                                                <p className='text-sm text-muted-foreground'>idk this is some random text writing at 11 </p>
+                                                <h4 className='font-medium '>{user?.fullname}</h4>
+                                                <p className='text-sm text-muted-foreground'>{user?.bio} </p>
                                             </div>
                                         </div>
                                         <div className='flex flex-col my-2  text-grey-600' >
