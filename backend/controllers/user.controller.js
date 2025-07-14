@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
+import streamifier from "streamifier";
 
 export const register = async (req, res) => {
   try {
@@ -22,6 +23,11 @@ export const register = async (req, res) => {
         .json({ message: "All fields are required", success: false });
     }
 
+    const file = req.file;
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
+
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       console.log("User already exists:", email);
@@ -39,6 +45,9 @@ export const register = async (req, res) => {
       phoneNumber,
       password: hashedPassword,
       role,
+      profile:{
+                profilePicture:cloudResponse.secure_url,
+            }
     });
 
     console.log("User registered:", email);
@@ -143,60 +152,69 @@ export const logOut = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
-    try {
-        const { fullname, email, phoneNumber, bio, skills } = req.body;
-        
-        const file = req.file;
-        // cloudinary ayega idhar
-        const fileUri = getDataUri(file);
-        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+  try {
+    const { fullname, email, phoneNumber, bio, skills } = req.body;
 
+    const file = req.file;
+    console.log("📥 File Received in Backend:");
+    console.log("  Name:", file?.originalname);
+    console.log("  Mimetype:", file?.mimetype);
+    console.log("  Buffer Length:", file?.buffer?.length);
 
+    // cloudinary ayega idhar
+    const fileUri = getDataUri(file);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content, {
+      resource_type: "raw",
+      folder: "Job Portal",
+      public_id: `Job Portal/${file.originalname}`,
+      use_filename: true,
+      unique_filename: false,
+    });
 
-        let skillsArray;
-        if(skills){
-            skillsArray = skills.split(",");
-        }
-        const userId = req.id; // middleware authentication
-        let user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(400).json({
-                message: "User not found.",
-                success: false
-            })
-        }
-        // updating data
-        if(fullname) user.fullname = fullname
-        if(email) user.email = email
-        if(phoneNumber)  user.phoneNumber = phoneNumber
-        if(bio) user.profile.bio = bio
-        if(skills) user.profile.skills = skillsArray
-      
-        // resume comes later here...
-        if(cloudResponse){
-            user.profile.resume = cloudResponse.secure_url // save the cloudinary url
-            user.profile.resumeOriginalName = file.originalname // Save the original file name
-        }
-
-
-        await user.save();
-
-        user = {
-            _id: user._id,
-            fullname: user.fullname,
-            email: user.email,
-            phoneNumber: user.phoneNumber,
-            role: user.role,
-            profile: user.profile
-        }
-
-        return res.status(200).json({
-            message:"Profile updated successfully.",
-            user,
-            success:true
-        })
-    } catch (error) {
-        console.log(error);
+    let skillsArray;
+    if (skills) {
+      skillsArray = skills.split(",");
     }
-}
+    const userId = req.id; // middleware authentication
+    let user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+    // updating data
+    if (fullname) user.fullname = fullname;
+    if (email) user.email = email;
+    if (phoneNumber) user.phoneNumber = phoneNumber;
+    if (bio) user.profile.bio = bio;
+    if (skills) user.profile.skills = skillsArray;
+
+    // resume comes later here...
+    if (cloudResponse) {
+      user.profile.resume = cloudResponse.secure_url; // save the cloudinary url
+      user.profile.resumeOriginalName = file.originalname; // Save the original file name
+      console.log("Resume uploaded to Cloudinary:", cloudResponse.secure_url);
+    }
+
+    await user.save();
+
+    user = {
+      _id: user._id,
+      fullname: user.fullname,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      role: user.role,
+      profile: user.profile,
+    };
+
+    return res.status(200).json({
+      message: "Profile updated successfully.",
+      user,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

@@ -28,7 +28,7 @@ const Profile = () => {
             <Avatar className={"h-24 w-24"}>
               <AvatarImage
                 alt="profile pic "
-                src="https://www.hasoptimization.com/wp-content/uploads/2017/01/linkedin-logo-3.png"
+                src={user?.profile?.profilePicture}
               ></AvatarImage>
             </Avatar>
 
