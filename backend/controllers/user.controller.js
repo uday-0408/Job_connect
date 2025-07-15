@@ -27,7 +27,6 @@ export const register = async (req, res) => {
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-
     const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       console.log("User already exists:", email);
@@ -45,9 +44,9 @@ export const register = async (req, res) => {
       phoneNumber,
       password: hashedPassword,
       role,
-      profile:{
-                profilePicture:cloudResponse.secure_url,
-            }
+      profile: {
+        profilePicture: cloudResponse.secure_url,
+      },
     });
 
     console.log("User registered:", email);
@@ -216,5 +215,47 @@ export const updateProfile = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const autoLogin = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    console.log("Auto-login token received:", token);
+    if (!token) {
+      return res.status(401).json({
+        message: "Not authenticated. Please log in.",
+        success: false,
+      });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found.",
+        success: false,
+      });
+    }
+
+    return res.status(200).json({
+      message: `User logged in successfully (auto-login). Welcome back ${user.fullname}`,
+      user: {
+        _id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        role: user.role,
+        profile: user.profile,
+      },
+      success: true,
+    });
+  } catch (error) {
+    console.error("Error during auto-login:", error);
+    return res.status(500).json({
+      message: "Internal server error during auto-login",
+      success: false,
+    });
   }
 };

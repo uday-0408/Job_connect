@@ -24,6 +24,15 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 //          /|----- |
 //          \|     /|
 
+// ___________________________
+// < deploy first, debug next >
+//  ---------------------------
+//         \   ^__^
+//          \  (oo)\_______
+//             (__)\       )\/\
+//                 ||----w |
+//                 ||     ||
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
