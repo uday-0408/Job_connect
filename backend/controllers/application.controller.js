@@ -148,3 +148,31 @@ export const updateStatus = async (req,res) => {
         });
     }
 }
+export const isApplied = async (req, res) => {
+    try {
+        const userId = req.id;
+        const jobId = req.params.id;
+        if (!jobId) {
+            return res.status(400).json({
+                message: "Job id is required.",
+                success: false
+            });
+        }
+        // Check if the user has already applied for the job
+        const existingApplication = await Application.findOne({ job: jobId, applicant: userId });   
+        if (existingApplication) {
+            return res.status(200).json({
+                message: "You have already applied for this job.",
+                success: true,
+                isApplied: true
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: `Internal Server Error from isApplied: ${error.message}`,
+            success: false,
+            error: error.message
+        });
+    }
+}

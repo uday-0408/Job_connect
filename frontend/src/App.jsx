@@ -10,6 +10,8 @@ import PageNotFound from "./components/PageNotFound";
 import ErrorBoundary from "./components/ErrorBoundry";
 // import { RouterProvider } from "react-router-dom";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Companies from "./components/admin/Companies";
+import CompanyCreate from "./components/admin/CompanyCreate";
 
 // ______________
 // < happy coding >
@@ -98,13 +100,31 @@ const appRouter = createBrowserRouter([
       </ErrorBoundary>
     ),
   },
+  // admin ke liye yha se start hoga
+
+  {
+    path: "/admin/companies",
+    element: (
+      <ErrorBoundary>
+        <Companies />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/admin/companies/create",
+    element: (
+      <ErrorBoundary>
+        <CompanyCreate />
+      </ErrorBoundary>
+    ),
+  },
 ]);
 function App() {
   return (
     <>
-     <ErrorBoundary>
-      <RouterProvider router={appRouter} />
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <RouterProvider router={appRouter} />
+      </ErrorBoundary>
       {/* <RouterProvider router={appRouter} /> */}
     </>
   );

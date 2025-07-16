@@ -5,10 +5,12 @@ import { useNavigate } from "react-router-dom";
 import { USER_API_END_POINT } from "@/utils/constant";
 import { setUser, setLoading } from "@/redux/authSlice";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
 
 const useAutoLogin = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const {user}=useSelector(store=>store.auth)
 
   useEffect(() => {
     const autoLogin = async () => {
@@ -34,7 +36,12 @@ const useAutoLogin = () => {
       }
     };
 
-    autoLogin();
+    if(user && user._id) {
+      // User is already logged in, no need to auto-login
+      return;
+    }else{
+      autoLogin();
+    }
   }, [dispatch, navigate]);
 };
 
