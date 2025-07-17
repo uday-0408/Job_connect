@@ -12,6 +12,8 @@ import ErrorBoundary from "./components/ErrorBoundry";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Companies from "./components/admin/Companies";
 import CompanyCreate from "./components/admin/CompanyCreate";
+import CompanySetup from "./components/admin/CompanySetup";
+import AdminJobs from "./components/admin/AdminJobs";
 
 // ______________
 // < happy coding >
@@ -115,6 +117,22 @@ const appRouter = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <CompanyCreate />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/admin/companies/:id",
+    element: (
+      <ErrorBoundary>
+        <CompanySetup />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/admin/jobs",
+    element: (
+      <ErrorBoundary>
+        <AdminJobs/>
       </ErrorBoundary>
     ),
   },

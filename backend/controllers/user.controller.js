@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
-import streamifier from "streamifier";
+// import streamifier from "streamifier";s
 
 export const register = async (req, res) => {
   try {
