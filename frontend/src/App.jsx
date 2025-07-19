@@ -14,6 +14,8 @@ import Companies from "./components/admin/Companies";
 import CompanyCreate from "./components/admin/CompanyCreate";
 import CompanySetup from "./components/admin/CompanySetup";
 import AdminJobs from "./components/admin/AdminJobs";
+import PostJob from "./components/admin/PostJob";
+import Applicants from "./components/admin/Applicants";
 
 // ______________
 // < happy coding >
@@ -133,6 +135,22 @@ const appRouter = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <AdminJobs/>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/admin/jobs/create",
+    element: (
+      <ErrorBoundary>
+        <PostJob/>
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/admin/jobs/:id/applicants",
+    element: (
+      <ErrorBoundary>
+        <Applicants />
       </ErrorBoundary>
     ),
   },

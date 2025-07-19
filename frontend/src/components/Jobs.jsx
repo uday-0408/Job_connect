@@ -4,11 +4,15 @@ import FilterCard from './FilterCard'
 import Job from './Job'
 import { motion } from 'framer-motion';
 import { useSelector } from 'react-redux';
-
+import { useGetAllJobs } from '@/hooks/useGetAllJobs';
 
 const filterJobs = [1, 2, 3,]
 const Jobs = () => {
   const { allJobs } = useSelector((store) => store.job);
+  if (allJobs.length <= 0) {
+    console.log("No jobs found, fetching all jobs...");
+    useGetAllJobs(); // Fetch all jobs if not already fetched
+  }
   return (
     <div>
       <Navbar />

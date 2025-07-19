@@ -2,14 +2,16 @@ import { Company } from "../models/company.model.js";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/datauri.js";
 
+// REGISTER COMPANY
 export const registerCompany = async (req, res) => {
   try {
-    console.log("registerCompany called");
+    console.log("🔥 registerCompany called");
     const { companyName } = req.body;
-    console.log("Request Body:", req.body);
+    console.log("📥 Request Body:", req.body);
+    console.log("🔐 Requesting User ID:", req.id);
 
     if (!companyName) {
-      console.warn("Company name missing in request");
+      console.warn("⚠️ Company name missing in request");
       return res.status(400).json({
         message: "Company name is required",
         success: false,
@@ -17,10 +19,10 @@ export const registerCompany = async (req, res) => {
     }
 
     const company = await Company.findOne({ name: companyName });
-    console.log("Existing Company Check:", company);
+    console.log("🔎 Existing Company Check:", company);
 
     if (company) {
-      console.warn("Company already exists");
+      console.warn("⚠️ Company already exists");
       return res.status(400).json({
         message: "Company already exists",
         success: false,
@@ -36,7 +38,7 @@ export const registerCompany = async (req, res) => {
       userId: req.id,
     });
 
-    console.log("Company Created:", company_obj);
+    console.log("✅ Company Created:", company_obj);
 
     return res.status(201).json({
       message: "Company registered successfully",
@@ -44,7 +46,7 @@ export const registerCompany = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error("registerCompany Error:", error);
+    console.error("❌ registerCompany Error:", error);
     return res.status(500).json({
       message: `Internal Server Error from registerCompany: ${error.message}`,
       success: false,
@@ -53,17 +55,18 @@ export const registerCompany = async (req, res) => {
   }
 };
 
+// GET COMPANY FOR LOGGED-IN USER
 export const getCompany = async (req, res) => {
   try {
-    console.log("getCompany called");
+    console.log("📡 getCompany called");
     const userId = req.id;
-    console.log("User ID:", userId);
+    console.log("🔐 Requesting User ID:", userId);
 
     const companies = await Company.find({ userId: userId });
-    console.log("Companies found:", companies);
+    console.log("🏢 Companies Found:", companies);
 
     if (!companies || companies.length === 0) {
-      console.warn("No companies found for user");
+      console.warn("⚠️ No companies found for user");
       return res.status(404).json({
         message: "No companies found for this user",
         success: false,
@@ -76,7 +79,7 @@ export const getCompany = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error("getCompany Error:", error);
+    console.error("❌ getCompany Error:", error);
     return res.status(500).json({
       message: `Internal Server Error from getCompany: ${error.message}`,
       success: false,
@@ -85,22 +88,26 @@ export const getCompany = async (req, res) => {
   }
 };
 
+// GET COMPANY BY ID
 export const getCompanyById = async (req, res) => {
   try {
-    console.log("getCompanyById called");
+    console.log("📡 getCompanyById called");
     const companyId = req.params.id;
-    console.log("Company ID:", companyId);
+    console.log("🆔 Company ID:", companyId);
+
     if (!companyId || companyId === "undefined") {
+      console.warn("⚠️ Invalid company ID");
       return res.status(400).json({
         message: "Invalid company ID",
         success: false,
       });
     }
+
     const company = await Company.findById(companyId);
-    console.log("Company Found:", company);
+    console.log("🏢 Company Found:", company);
 
     if (!company) {
-      console.warn("Company not found");
+      console.warn("⚠️ Company not found");
       return res.status(404).json({
         message: "Company not found",
         success: false,
@@ -113,7 +120,7 @@ export const getCompanyById = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error("getCompanyById Error:", error);
+    console.error("❌ getCompanyById Error:", error);
     return res.status(500).json({
       message: `Internal Server Error from getCompanyById: ${error.message}`,
       success: false,
@@ -122,29 +129,32 @@ export const getCompanyById = async (req, res) => {
   }
 };
 
+// UPDATE COMPANY
 export const updateCompany = async (req, res) => {
   try {
-    console.log("updateCompany called");
+    console.log("🔧 updateCompany called");
     const companyId = req.params.id;
     const { companyName, description, website, location } = req.body;
     const file = req.file;
-    console.log("Request Params:", req.params);
-    console.log("Request Body:", req.body);
-    console.log("Uploaded File:", file);
+
+    console.log("🆔 Company ID:", companyId);
+    console.log("📥 Request Body:", req.body);
+    console.log("📎 Uploaded File:", file);
 
     let logo = "";
 
     if (!companyName) {
-      console.warn("Company name missing in update request");
+      console.warn("⚠️ Company name missing in update request");
       return res.status(400).json({
         message: "Company name is required",
         success: false,
       });
     }
 
+    // Upload logo to Cloudinary if present
     try {
       if (file) {
-        console.log("uploading To cloudinary");
+        console.log("🌩️ Uploading to Cloudinary...");
         const fileUri = getDataUri(file);
         const cloudResponse = await cloudinary.uploader.upload(
           fileUri.content,
@@ -158,17 +168,17 @@ export const updateCompany = async (req, res) => {
         );
         if (cloudResponse && cloudResponse.secure_url) {
           logo = cloudResponse.secure_url;
-          console.log("Logo uploaded to Cloudinary:", logo);
+          console.log("✅ Logo uploaded to Cloudinary:", logo);
         }
       }
-    } catch (error) {
-      console.error(error);
+    } catch (uploadError) {
+      console.error("❌ Cloudinary Upload Error:", uploadError);
     }
 
     const company = await Company.findByIdAndUpdate(
       companyId,
       {
-        companyName: companyName,
+        name: companyName,
         userId: req.id,
         description: description || "",
         website: website || "",
@@ -178,10 +188,10 @@ export const updateCompany = async (req, res) => {
       { new: true }
     );
 
-    console.log("Company Updated:", company);
+    console.log("🔁 Company Updated:", company);
 
     if (!company) {
-      console.warn("Company not found for update");
+      console.warn("⚠️ Company not found for update");
       return res.status(404).json({
         message: "Company not found",
         success: false,
@@ -194,7 +204,7 @@ export const updateCompany = async (req, res) => {
       success: true,
     });
   } catch (error) {
-    console.error("updateCompany Error:", error);
+    console.error("❌ updateCompany Error:", error);
     return res.status(500).json({
       message: `Internal Server Error from updateCompany: ${error.message}`,
       success: false,
