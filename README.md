@@ -421,7 +421,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📧 Contact
 
-Project Link: [https://github.com/yourusername/job-connect](https://github.com/yourusername/job-connect)
+Project Link: [https://github.com/uday-0408/Job_connect](https://github.com/uday-0408/Job_connect)
 
 ---
 
