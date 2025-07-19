@@ -16,6 +16,7 @@ import CompanySetup from "./components/admin/CompanySetup";
 import AdminJobs from "./components/admin/AdminJobs";
 import PostJob from "./components/admin/PostJob";
 import Applicants from "./components/admin/Applicants";
+import ProtectedRoute from "./components/admin/ProtectedRoute";
 
 // ______________
 // < happy coding >
@@ -109,49 +110,61 @@ const appRouter = createBrowserRouter([
   {
     path: "/admin/companies",
     element: (
-      <ErrorBoundary>
-        <Companies />
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <Companies />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/admin/companies/create",
     element: (
-      <ErrorBoundary>
-        <CompanyCreate />
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <CompanyCreate />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/admin/companies/:id",
     element: (
-      <ErrorBoundary>
-        <CompanySetup />
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <CompanySetup />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/admin/jobs",
     element: (
-      <ErrorBoundary>
-        <AdminJobs/>
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <AdminJobs />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/admin/jobs/create",
     element: (
-      <ErrorBoundary>
-        <PostJob/>
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <PostJob />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
   {
     path: "/admin/jobs/:id/applicants",
     element: (
-      <ErrorBoundary>
-        <Applicants />
-      </ErrorBoundary>
+      <ProtectedRoute>
+        <ErrorBoundary>
+          <Applicants />
+        </ErrorBoundary>
+      </ProtectedRoute>
     ),
   },
 ]);

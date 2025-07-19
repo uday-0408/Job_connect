@@ -4,69 +4,67 @@ import { Bookmark } from "lucide-react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "./ui/badge";
-import { color } from "framer-motion";
-import { formatJobDate } from "../utils/formatJobDate"; // Assuming you have a utility function for date formatting
+import { formatJobDate } from "../utils/formatJobDate";
 
 const Job = ({ job }) => {
   const navigate = useNavigate();
-  const jobId = "oihgihs"; // This should be dynamic based on the job being displayed
-//   const formatDate = (isoString) => {
-//   return new Date(isoString).toLocaleDateString("en-GB", {
-//     day: "2-digit",
-//     month: "short",
-//     year: "numeric"
-//   });
-// };
 
   return (
-    <div className="p-5 rounded-md shadow-xl bg-white border-gray-200">
-      <div className="flex items-center justify-between">
-        <p>{formatJobDate(job?.createdAt)}</p>
-        <Button>
-          <Bookmark
-            className="rounded-full"
-            size="icon"
-            variant="outline"
-          ></Bookmark>
+    <div className="p-4 md:p-6 rounded-xl shadow-lg bg-white border border-gray-100 max-w-full break-words">
+      {/* Top Row */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <p className="text-sm text-gray-500">{formatJobDate(job?.createdAt)}</p>
+        <Button size="icon" variant="ghost" className="rounded-full">
+          <Bookmark className="w-5 h-5" />
         </Button>
       </div>
-      <div className="flex items-center gap-2 my-2">
-        <Button className="p-6" variant="outline" size="icon">
-          <Avatar>
-            <AvatarImage src={job?.company?.logo}></AvatarImage>
+
+      {/* Company Info */}
+      <div className="flex items-center gap-3 my-4">
+        <div className="flex-shrink-0">
+          <Avatar className="w-12 h-12">
+            <AvatarImage src={job?.company?.logo} alt="logo" />
           </Avatar>
-        </Button>
+        </div>
         <div>
-          <h1 className="font-medium text-lg ">{job?.company?.name}</h1>
+          <h2 className="font-semibold text-lg text-gray-800">
+            {job?.company?.name}
+          </h2>
           <p className="text-sm text-gray-500">{job?.location}</p>
         </div>
       </div>
+
+      {/* Job Title & Description */}
       <div>
-        <h1 className="font-bold text-lg my-2 text-gray-800">{job?.title}</h1>
-        <p className="text-sm text-gray-600">{job?.description} </p>
+        <h3 className="font-bold text-lg text-gray-900 mb-1">
+          {job?.title}
+        </h3>
+        <p className="text-sm text-gray-600 line-clamp-3">{job?.description}</p>
       </div>
+
+      {/* Badges */}
       <div className="flex flex-wrap gap-2 mt-3">
-        <Badge className="text-blue-700 bg-blue-100 font-bold px-3 py-1 rounded-full">
+        <Badge className="bg-blue-100 text-blue-700 font-semibold">
           {job?.position} Positions
         </Badge>
-        <Badge className="text-green-700 bg-green-100 font-bold px-3 py-1 rounded-full">
+        <Badge className="bg-green-100 text-green-700 font-semibold">
           {job?.jobType}
         </Badge>
-        <Badge className="text-purple-700 bg-purple-100 font-bold px-3 py-1 rounded-full">
-        {job?.salary} LPA
+        <Badge className="bg-purple-100 text-purple-700 font-semibold">
+          {job?.salary} LPA
         </Badge>
       </div>
-      <div className="flex items-center gap-4 mt-4">
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-3 mt-5">
         <Button
-          onClick={() => {
-            navigate(`/description/${job?._id}`);
-          }}
+          onClick={() => navigate(`/description/${job?._id}`)}
           variant="outline"
-          className="text-gray-700 border-gray-300 hover:bg-gray-100"
+          className="flex-1 min-w-[120px] text-gray-700 border-gray-300 hover:bg-gray-100"
         >
           Details
         </Button>
-        <Button className="bg-[#7209b7] text-white hover:bg-[#5e0791]">
+        <Button className="flex-1 min-w-[120px] bg-[#7209b7] text-white hover:bg-[#5e0791]">
           Save for Later
         </Button>
       </div>

@@ -8,16 +8,17 @@ import { Label } from "./ui/label";
 import AppliedJobTable from "./AppliedJobTable";
 import UpdateProfileDialog from "./UpdateProfileDialog";
 import { useSelector } from "react-redux";
-// import { store } from "../redux/store";
+import useGetAppliedJobs from "../hooks/useGetAppliedJobs";
 
 // const skills = ["html", "css", "js", "react"];
 // const skills=[]
 
 const isHaveResume = true;
 const Profile = () => {
+  useGetAppliedJobs(); // Custom hook to fetch applied jobs
   const [open, setOpen] = useState(false);
   const { user } = useSelector((store) => store.auth);
- 
+
   return (
     <div>
       <Navbar></Navbar>
@@ -61,7 +62,9 @@ const Profile = () => {
           <h1>Skills</h1>
           <div className="flex items-center gap-1">
             {user?.profile?.skills.length != 0 ? (
-              user?.profile?.skills.map((item, index) => <Badge key={index}>{item}</Badge>)
+              user?.profile?.skills.map((item, index) => (
+                <Badge key={index}>{item}</Badge>
+              ))
             ) : (
               <span>NA</span>
             )}

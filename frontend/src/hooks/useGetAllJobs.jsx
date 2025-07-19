@@ -1,38 +1,28 @@
-import React from "react";
-import axios from "axios";
-import { useEffect } from "react";
-import { JOB_API_END_POINT } from "@/utils/constant";
-import { useDispatch } from "react-redux";
-import { setAllJobs } from "@/redux/jobSlice";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { setAllJobs } from '@/redux/jobSlice'
+import { JOB_API_END_POINT } from '@/utils/constant'
+import axios from 'axios'
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 export const useGetAllJobs = () => {
-  console.log("useGetAllJobs hook called");
-  const dispatch = useDispatch(); // ✅ Fixed typo
-  const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const {searchedQuery} = useSelector(store=>store.job);
+    useEffect(()=>{
+        const fetchAllJobs = async () => {
+            try {
+                const res = await axios.get(`${JOB_API_END_POINT}/get?keyword=${searchedQuery}`,{withCredentials:true});
+                console.log(res.data);
+                if(res.data.success){
+                    dispatch(setAllJobs(res.data.jobs));
+                }else{
+                    console.error("No jobs found");
+                    dispatch(setAllJobs([]));
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchAllJobs();
+    },[])
+}
 
-  useEffect(() => {
-    const fetchAllJobs = async () => {
-      try {
-        console.info("Fetching all jobs...");
-        const res = await axios.get(`${JOB_API_END_POINT}/get`, {
-          withCredentials: true,
-        });
-        if (res.data.success) {
-          dispatch(setAllJobs(res.data.jobs)); // ✅ Fixed typo
-        }
-        console.info("All jobs fetched successfully", res.data.jobs);
-      } catch (error) {
-        console.log("error from useGetAllJobs hook: " + error);
-        // ✅ Fixed error handling
-        if (error.response?.status === 401) {
-          console.warn("Unauthorized access, redirecting to login");
-          toast.warning("LOgin to continue");
-          navigate("/login");
-        }
-      }
-    };
-    fetchAllJobs();
-  }, [dispatch, navigate]); // ✅ Added dependencies
-};
