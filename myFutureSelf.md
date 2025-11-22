@@ -1,0 +1,1 @@
+## This project is just the entire MERN part of main project job portal using FSD and python(django) in sem-4
